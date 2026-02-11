@@ -1,0 +1,41 @@
+PySide6
+langchain
+langchain-core
+langchain-openai
+langchain-community
+langchain-huggingface
+langchain-text-splitters
+chromadb
+sentence-transformers
+transformers
+huggingface_hub
+pypdf
+safetensors
+pyyaml
+
+# ---- Optional (extend loaders) ----
+# doc/docx support
+# python-docx
+# docx2txt
+# unstructured
+
+# ppt/pptx support
+# python-pptx
+# unstructured
+
+# xlsx/csv enhanced support
+# openpyxl
+# pandas
+
+# html support
+# beautifulsoup4
+# lxml
+# unstructured
+
+# url/web page loader
+# requests
+# beautifulsoup4
+# lxml
+
+# code file parsing (optional)
+# pygments

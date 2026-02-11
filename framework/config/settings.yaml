@@ -1,0 +1,30 @@
+app:
+  name: "Local Research RAG Agent"
+  log_level: "INFO"
+
+paths:
+  knowledge_base_dir: "../data/knowledge_base"
+  vector_store_dir: "../data/vector_store"
+
+embedding:
+  model_name: "BAAI/bge-m3"
+  device: "cpu"
+  batch_size: 32
+
+chunk:
+  size: 800
+  overlap: 100
+
+retriever:
+  top_k: 5
+
+llm:
+  api_base: ""
+  api_key: ""
+  model: "gpt-4o-mini"
+  temperature: 0.2
+
+ui:
+  window_title: "Local RAG Chat"
+  font_family: "Helvetica"
+  font_size: 12
