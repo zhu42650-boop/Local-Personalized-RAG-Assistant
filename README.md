@@ -2,7 +2,7 @@
 
 A production‑ready **personalized local assistant** that performs retrieval‑augmented dialogue over user‑provided files. It combines a local knowledge base, vector search, and LLM API calls with a desktop UI for daily research or work collaboration.
 
-![UI Demo](image/image.png)
+<img src="image/image.png" width="600" alt="UI Demo" />
 
 ## Highlights
 - **Local knowledge base** with note/paper categories and file management
@@ -80,6 +80,3 @@ Edit `framework/config/settings.yaml` to set:
 - Streaming responses in UI
 - Additional loaders (docx/pptx/xlsx/html) with optional dependencies
 - Offline/local LLM support
-
-## License
-MIT (if you want, add a LICENSE file).
