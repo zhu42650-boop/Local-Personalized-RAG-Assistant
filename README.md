@@ -1,82 +1,98 @@
-# Local Personalized RAG Assistant
+# Research RAG Assistant (Local + Custom Embeddings)
 
-A production‑ready **personalized local assistant** that performs retrieval‑augmented dialogue over user‑provided files. It combines a local knowledge base, vector search, and LLM API calls with a desktop UI for daily research or work collaboration.
+一个面向科研场景的本地 RAG 助手，围绕“高质量检索 + 可控证据 + 长文本压缩”做工程化优化。核心目标是：**让科研资料可被可靠检索、可溯源引用、可在长文本条件下稳定回答**。
 
-<img src="image/image.png" width="600" alt="UI Demo" />
+---
 
-## Highlights
-- **Local knowledge base** with note/paper categories and file management
-- **RAG pipeline**: loading → splitting → embedding → vector search → prompt → response
-- **Local embeddings** with `bge-m3` + `sentence-transformers`
-- **Chroma** persistent vector store
-- **LangChain** for RAG + agent tool interface
-- **Desktop UI** (PySide6): chat, drag‑and‑drop import, indexed search, and history
+## 项目目的
+构建一个 **科研协作型 RAG 系统**，支持：
+- 本地论文/笔记/资料的检索式对话
+- 可追溯证据链（chunk 级来源）
+- 适应科研长文档与结构化论文的召回
 
-## Architecture Overview
-```
-User files → loaders → splitters → embeddings → Chroma
-                                  ↑         ↓
-                             query embed  retriever
-                                  ↓         ↓
-                               prompt + history → LLM API → response
-```
+---
 
-## Project Structure
-```
-local agent/
-  framework/
-    main.py                 # framework entry
-    config/
-      settings.yaml         # configuration
-      loader.py             # config loader/validator
-      env_check.py          # environment checks
-    ingest/
-      loaders.py            # file loaders
-      splitters.py          # text splitters
-      indexer.py            # embeddings + indexing
-      file_manager.py       # file import helpers
-      service.py            # ingest orchestration
-      cli_ingest.py         # CLI ingest
-    rag/
-      prompt.py             # prompt template
-      retriever.py          # vector retriever
-      chat.py               # RAG QA
-      agent.py              # tool-based agent
-    ui/
-      window.py             # PySide6 desktop UI
-    data/
-      knowledge_base/
-        note/
-        paper/
-      vector_store/
-      history.json
-```
+## 关键改进点（相较普通 RAG Demo）
 
-## Quick Start
+### 1) Embedding 服务升级
+- 不再使用通用 bge‑m3，改为 **Qwen3‑Embedding 微调版本**
+- 采用对科研数据的“query‑chunk”对比学习
+- 支持 LoRA 微调与离线部署
+
+### 2) 分块按类别策略
+- **paper**：结构化分块（按章节标题切分再递归分块）
+- **note**：轻量固定分块
+- 其它类型可扩展语义分块策略
+
+### 3) 混合检索 + 召回增强
+实现 **BM25 + 向量混检**，并支持 **rerank 重排序**：
+- BM25 捕获关键词精确匹配
+- 向量检索补齐语义召回
+- rerank 提升 top‑k 质量
+
+### 4) 长文本处理
+在检索后加入 **小模型摘要压缩**：
+- 当上下文过长时自动摘要
+- 保留关键信息，减少 prompt 长度
+
+---
+
+## 快速开始
+
 ```bash
 python framework/main.py
 ```
 
-## CLI Ingest
+### CLI 重建索引
 ```bash
-python framework/ingest/cli_ingest.py --category note --files /path/to/a.pdf --reindex
+python framework/ingest/cli_ingest.py --reindex
 ```
 
-## Configuration
-Edit `framework/config/settings.yaml` to set:
-- knowledge base and vector store paths
-- embedding model/device
-- chunk size/overlap
-- LLM API endpoint + key
+---
 
-## Notes
-- Files are indexed only after **Rebuild Index** (or `--reindex`) is executed.
-- History is stored locally in `framework/data/history.json`.
+## 目录结构
+```
+framework/
+  config/           # 配置与环境检查
+  ingest/           # 加载、分块、索引
+  rag/              # 检索与回答
+  ui/               # 桌面 UI
+_data/
+  knowledge_base/   # 知识库（paper/note/...）
+  vector_store/     # Chroma 向量库
+  chunks.jsonl      # BM25 使用的 chunk 集合
+scripts/
+  collect_papers.py # 论文抓取
+  chunk_papers.py   # PDF 分块
+  gen_queries.py    # LLM 生成 query
+  train_embedding.py# embedding 微调
+```
 
-## Future Work
-- Multi-session management (rename/delete/export history)
-- Reranker integration for higher retrieval precision
-- Hybrid retrieval (BM25 + vector search)
-- Streaming responses in UI
-- Additional loaders (docx/pptx/xlsx/html) with optional dependencies
-- Offline/local LLM support
+---
+
+## 配置示例（核心字段）
+```
+embedding:
+  model_name: "/path/to/qwen3-embed-ft"
+  device: "cuda"
+
+retriever:
+  top_k_vector: 6
+  top_k_bm25: 6
+  top_k_final: 6
+
+summary:
+  enabled: true
+  model: "gpt-4o-mini"
+```
+
+---
+
+## 备注
+- 若使用 LoRA 训练，请先合并 adapter 再用于 embedding 服务
+- 如果启用 rerank，请在 `rerank.model_name` 中配置模型路径
+
+---
+
+## License
+MIT

@@ -1,4 +1,15 @@
 __pycache__/
 *.pyc
-app/data/vector_store/
-app/data/history.json
+.DS_Store
+.env
+.venv/
+
+# Data / indexes / caches
+data/
+framework/data/
+**/vector_store/
+**/chunks.jsonl
+**/*.pdf
+
+# Models
+models/

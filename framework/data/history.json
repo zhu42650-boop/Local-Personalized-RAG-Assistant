@@ -1,5 +1,61 @@
 [
   {
+    "title": "你知道agent吗",
+    "time": "2026-03-01 13:30",
+    "messages": [
+      {
+        "role": "你",
+        "text": "你知道agent吗"
+      },
+      {
+        "role": "助手",
+        "text": "是的，AgentNet是一种多智能体系统，定义为一个元组G = (A, E)，其中A表示一组自主代理，E表示它们之间的单向通信连接。每个代理由两个主要组件组成：roui（代理路由器）和exei（代理执行器），这两个组件的功能由大型语言模型（LLM）支持，以解决特定问题。\n\nAgentNet的特点包括：\n1. **自适应学习机制**：代理能够根据任务经验进行改进和专业化，而无需明确的角色分配。\n2. **ReAct框架**：代理利用推理与行动的结合来增强决策能力。\n3. **检索增强生成机制**：通过从记忆模块中检索相关的轨迹片段来增强推理过程。\n\n这些特点使AgentNet在处理复杂任务时具有优势。"
+      }
+    ]
+  },
+  {
+    "title": "你知道agent吗",
+    "time": "2026-03-01 13:30",
+    "messages": [
+      {
+        "role": "你",
+        "text": "你知道agent吗"
+      },
+      {
+        "role": "助手",
+        "text": "是的，AgentNet是一种多智能体系统，定义为一个元组G = (A, E)，其中A表示一组自主代理，E表示它们之间的单向通信连接。每个代理由两个主要组件组成：roui（代理路由器）和exei（代理执行器），这两个组件的功能由大型语言模型（LLM）支持，以解决特定问题。\n\nAgentNet的特点包括：\n1. **自适应学习机制**：代理能够根据任务经验进行改进和专业化，而无需明确的角色分配。\n2. **ReAct框架**：代理利用推理与行动的结合来增强决策能力。\n3. **检索增强生成机制**：通过从记忆模块中检索相关的轨迹片段来增强推理过程。\n\n这些特点使AgentNet在处理复杂任务时具有优势。"
+      }
+    ]
+  },
+  {
+    "title": "你好，你知道agent吗",
+    "time": "2026-03-01 13:28",
+    "messages": [
+      {
+        "role": "你",
+        "text": "你好，你知道agent吗"
+      },
+      {
+        "role": "系统",
+        "text": "发生错误：Error code: 404 - {'error': {'message': 'Invalid URL (POST /chat/completions)', 'type': 'invalid_request_error', 'param': '', 'code': ''}}"
+      }
+    ]
+  },
+  {
+    "title": "你好，你知道agent吗",
+    "time": "2026-03-01 13:28",
+    "messages": [
+      {
+        "role": "你",
+        "text": "你好，你知道agent吗"
+      },
+      {
+        "role": "系统",
+        "text": "发生错误：Error code: 404 - {'error': {'message': 'Invalid URL (POST /chat/completions)', 'type': 'invalid_request_error', 'param': '', 'code': ''}}"
+      }
+    ]
+  },
+  {
     "title": "实验结果怎么样",
     "time": "2026-01-11 21:57",
     "messages": [

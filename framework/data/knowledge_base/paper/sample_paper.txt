@@ -1,0 +1,43 @@
+Title: Multi-Agent Coordination for Scientific Discovery
+
+Abstract
+We study multi-agent coordination in scientific discovery tasks. Our approach uses
+a shared memory and explicit role assignment to improve hypothesis generation and
+evidence aggregation. Experiments show gains on literature review and experiment
+planning benchmarks.
+
+Introduction
+Multi-agent systems are increasingly used for complex scientific workflows. These
+workflows require long-horizon planning, collaborative reasoning, and consistent
+knowledge updates. We propose a coordination framework that decomposes tasks into
+specialized roles and uses a shared memory to track hypotheses and citations.
+
+Related Work
+Prior work on agent collaboration focuses on tool use, debate, or voting. In
+scientific contexts, these methods often suffer from fragmented memory and weak
+evidence tracking.
+
+Method
+Our system defines three roles: Planner, Researcher, and Verifier. The Planner
+decomposes goals into subtasks, the Researcher gathers evidence, and the Verifier
+checks consistency and citation integrity. A shared memory store captures claims,
+supporting evidence, and confidence scores. The system updates memory with a
+conflict-resolution rule based on citation overlap and confidence.
+
+Experiments
+We evaluate on two datasets: a literature review task and an experiment design
+task. Metrics include factual consistency, citation accuracy, and task completion
+time. Our approach improves citation accuracy by 12% and reduces task time by 18%.
+
+Discussion
+The shared memory improves collaboration but can become a bottleneck with many
+agents. We discuss sharding strategies and selective memory updates to address
+scalability.
+
+Conclusion
+We present a coordination framework for multi-agent scientific discovery. The
+approach improves citation accuracy and overall task performance.
+
+References
+[1] Author A. Title. Venue. 2023.
+[2] Author B. Title. Venue. 2024.

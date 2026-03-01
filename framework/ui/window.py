@@ -7,7 +7,6 @@ from typing import Iterable, List
 from PySide6 import QtCore, QtGui, QtWidgets
 from langchain_openai import ChatOpenAI
 
-# 保持你原有的 import 不变
 from config.env_check import ensure_dirs
 from config.loader import load_settings, resolve_paths
 from ingest.file_manager import add_files_to_category
@@ -94,7 +93,7 @@ class DropPanel(QtWidgets.QFrame):
         layout.addWidget(hint)
         layout.addStretch(1)
 
-        # 稍微调整边框颜色以匹配类别
+        # 调整边框颜色以匹配类别
         self.setStyleSheet(f"""
             QFrame#DropPanel {{
                 border: 2px dashed {color_hex};
@@ -218,6 +217,7 @@ class ChatWindow(QtWidgets.QMainWindow):
 
         self.retriever = None
         self.llm = None
+        self.summary_llm = None
         self.history = []
         self.current_session = []
         self.loading_history = False
@@ -480,6 +480,11 @@ class ChatWindow(QtWidgets.QMainWindow):
                 device=self.settings.get("embedding.device"),
                 batch_size=self.settings.get("embedding.batch_size"),
                 top_k=self.settings.get("retriever.top_k"),
+                chunks_file=self.paths.get("chunks_file", ""),
+                top_k_vector=self.settings.get("retriever.top_k_vector"),
+                top_k_bm25=self.settings.get("retriever.top_k_bm25"),
+                top_k_final=self.settings.get("retriever.top_k_final"),
+                rerank_model=self.settings.get("rerank.model_name") or "",
             )
         if self.llm is None:
             self.llm = ChatOpenAI(
@@ -488,6 +493,16 @@ class ChatWindow(QtWidgets.QMainWindow):
                 model=self.settings.get("llm.model"),
                 temperature=self.settings.get("llm.temperature"),
             )
+        if getattr(self, "summary_llm", None) is None:
+            if self.settings.get("summary.enabled"):
+                self.summary_llm = ChatOpenAI(
+                    base_url=self.settings.get("llm.api_base"),
+                    api_key=self.settings.get("llm.api_key"),
+                    model=self.settings.get("summary.model") or self.settings.get("llm.model"),
+                    temperature=self.settings.get("summary.temperature", 0.0),
+                )
+            else:
+                self.summary_llm = None
 
     def on_send(self):
         question = self.entry.text().strip()
@@ -501,7 +516,17 @@ class ChatWindow(QtWidgets.QMainWindow):
             try:
                 self._ensure_llm_retriever()
                 history = self.current_session[-6:]
-                answer = answer_question(question, self.retriever, self.llm, chat_history=history)
+                answer = answer_question(
+                    question,
+                    self.retriever,
+                    self.llm,
+                    chat_history=history,
+                    summary_llm=getattr(self, "summary_llm", None),
+                    summary_cfg={
+                        "max_chars_per_chunk": self.settings.get("summary.max_chars_per_chunk"),
+                        "max_context_chars": self.settings.get("summary.max_context_chars"),
+                    },
+                )
                 self.signals.append_chat.emit("助手", answer)
                 self.signals.set_status.emit("就绪")
             except Exception as exc:

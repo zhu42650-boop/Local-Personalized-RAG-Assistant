@@ -1,3 +1,4 @@
+import os
 from typing import List
 
 from langchain_core.documents import Document
@@ -7,6 +8,17 @@ from langchain_community.document_loaders import (
     PyPDFLoader,
     TextLoader,
 )
+
+
+def _infer_category(source_path: str, base_dir: str) -> str:
+    try:
+        rel = os.path.relpath(source_path, base_dir)
+    except ValueError:
+        rel = source_path
+    parts = rel.split(os.sep)
+    if parts:
+        return parts[0]
+    return "default"
 
 
 def load_documents(input_dir: str) -> List[Document]:
@@ -40,4 +52,8 @@ def load_documents(input_dir: str) -> List[Document]:
     docs: List[Document] = []
     for loader in loaders:
         docs.extend(loader.load())
+    for doc in docs:
+        source = doc.metadata.get("source", "")
+        if source:
+            doc.metadata["category"] = _infer_category(source, input_dir)
     return docs

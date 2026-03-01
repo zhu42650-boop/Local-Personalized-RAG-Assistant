@@ -5,6 +5,7 @@ app:
 paths:
   knowledge_base_dir: "../data/knowledge_base"
   vector_store_dir: "../data/vector_store"
+  chunks_file: "../data/chunks.jsonl"
 
 embedding:
   model_name: "BAAI/bge-m3"
@@ -14,15 +15,32 @@ embedding:
 chunk:
   size: 800
   overlap: 100
+  paper_size: 1200
+  paper_overlap: 200
+  note_size: 700
+  note_overlap: 100
 
 retriever:
   top_k: 5
+  top_k_vector: 6
+  top_k_bm25: 6
+  top_k_final: 6
+
+rerank:
+  model_name: ""
 
 llm:
   api_base: ""
   api_key: ""
   model: "gpt-4o-mini"
   temperature: 0.2
+
+summary:
+  enabled: true
+  model: "gpt-4o-mini"
+  temperature: 0.0
+  max_chars_per_chunk: 900
+  max_context_chars: 3500
 
 ui:
   window_title: "Local RAG Chat"

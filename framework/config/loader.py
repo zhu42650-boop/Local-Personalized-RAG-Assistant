@@ -73,7 +73,9 @@ def resolve_paths(settings: Settings, config_path: str) -> Dict[str, str]:
     vs_dir = settings.get("paths.vector_store_dir")
     if kb_dir is None or vs_dir is None:
         raise ValueError("paths.knowledge_base_dir and paths.vector_store_dir are required")
+    chunks_file = settings.get("paths.chunks_file")
     return {
         "knowledge_base_dir": _resolve_path(base_dir, kb_dir),
         "vector_store_dir": _resolve_path(base_dir, vs_dir),
+        "chunks_file": _resolve_path(base_dir, chunks_file) if chunks_file else "",
     }

@@ -12,6 +12,9 @@ huggingface_hub
 pypdf
 safetensors
 pyyaml
+requests
+feedparser
+rank-bm25
 
 # ---- Optional (extend loaders) ----
 # doc/docx support
