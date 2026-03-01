@@ -1,27 +1,27 @@
 # Research RAG Assistant (Local + Custom Embeddings)
 
-一个面向科研场景的本地 RAG 助手，围绕“高质量检索 + 可控证据 + 长文本压缩”做工程化优化。核心目标是：**让科研资料可被可靠检索、可溯源引用、可在长文本条件下稳定回答**。
+面向科研场景的本地 RAG 助手，聚焦 **高质量检索**、**可控证据** 与 **长文本稳定回答**。  
+目标：让科研资料可被可靠检索、可溯源引用、可在长文本条件下稳定回答。
 
 ---
 
-## 项目目的
-构建一个 **科研协作型 RAG 系统**，支持：
-- 本地论文/笔记/资料的检索式对话
-- 可追溯证据链（chunk 级来源）
-- 适应科研长文档与结构化论文的召回
+## Why This Project
+- 面向科研资料的 **结构化分块** 与 **混合检索**，提升召回质量
+- 支持 **自研/微调 embedding**，用于科研语义对齐
+- **上下文压缩** 控制长文提示词规模
 
 ---
 
-## 关键改进点（相较普通 RAG Demo）
+## Key Improvements (vs. vanilla RAG demo)
 
-### 1) Embedding 服务升级
+### 1) Embedding 体系升级
 - 不再使用通用 bge‑m3，改为 **Qwen3‑Embedding 微调版本**
-- 采用对科研数据的“query‑chunk”对比学习
+- 采用科研数据的 query‑chunk 对比学习
 - 支持 LoRA 微调与离线部署
 
 ### 2) 分块按类别策略
-- **paper**：结构化分块（按章节标题切分再递归分块）
-- **note**：轻量固定分块
+- paper: 结构化分块（章节标题切分 + 递归分块）
+- note: 轻量固定分块
 - 其它类型可扩展语义分块策略
 
 ### 3) 混合检索 + 召回增强
@@ -37,27 +37,38 @@
 
 ---
 
-## 快速开始
+## Pipeline Overview
+```
+User Files -> Loaders -> Category Splitters -> Embeddings -> Chroma
+                                       |                 |
+                                       +-> BM25 Index ----+
+                                                        |
+Query -> Vector + BM25 -> Merge -> (Optional Rerank) -> Context Compression -> LLM
+```
+
+---
+
+## Quick Start
 
 ```bash
 python framework/main.py
 ```
 
-### CLI 重建索引
+### CLI Reindex
 ```bash
 python framework/ingest/cli_ingest.py --reindex
 ```
 
 ---
 
-## 目录结构
+## Project Layout
 ```
 framework/
   config/           # 配置与环境检查
   ingest/           # 加载、分块、索引
   rag/              # 检索与回答
   ui/               # 桌面 UI
-_data/
+data/
   knowledge_base/   # 知识库（paper/note/...）
   vector_store/     # Chroma 向量库
   chunks.jsonl      # BM25 使用的 chunk 集合
@@ -66,11 +77,12 @@ scripts/
   chunk_papers.py   # PDF 分块
   gen_queries.py    # LLM 生成 query
   train_embedding.py# embedding 微调
+test_retrieval.py   # 端到端检索测试
 ```
 
 ---
 
-## 配置示例（核心字段）
+## Configuration (Core Fields)
 ```
 embedding:
   model_name: "/path/to/qwen3-embed-ft"
@@ -88,7 +100,19 @@ summary:
 
 ---
 
-## 备注
+## Scripts Overview
+
+| Script | Purpose |
+| --- | --- |
+| `scripts/collect_papers.py` | 从多源检索并下载论文 |
+| `scripts/chunk_papers.py` | PDF 分块（可跳过坏文件） |
+| `scripts/gen_queries.py` | 为 chunk 生成检索 query（训练数据） |
+| `scripts/train_embedding.py` | 微调 embedding（支持 LoRA） |
+| `test_retrieval.py` | 分块->向量->检索链路测试 |
+
+---
+
+## Notes
 - 若使用 LoRA 训练，请先合并 adapter 再用于 embedding 服务
 - 如果启用 rerank，请在 `rerank.model_name` 中配置模型路径
 
