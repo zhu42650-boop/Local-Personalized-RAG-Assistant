@@ -15,8 +15,8 @@
 ## Key Improvements (vs. vanilla RAG demo)
 
 ### 1) Embedding 体系升级
-- 不再使用通用 bge‑m3，改为 **Qwen3‑Embedding 微调版本**
-- 采用科研数据的 query‑chunk 对比学习
+- 改为 **Qwen3‑Embedding 版本，使用自制数据进行微调**
+- 采用科研paper数据,llm 生成 query,得到4000条文本对
 - 支持 LoRA 微调与离线部署
 
 ### 2) 分块按类别策略
